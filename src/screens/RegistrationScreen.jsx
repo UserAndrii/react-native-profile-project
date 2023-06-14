@@ -17,28 +17,29 @@ import AuthorisationLinkTo from "../components/AuthorisationLinkTo";
 export default function RegistrationScreen() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <ImageBackground style={styles.avatar}>
-          <View style={styles.icon}>
-            <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
-          </View>
-
-          {/* <View style={styles.icon}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 100}
+        style={{ flex: 1, justifyContent: "flex-end" }}
+      >
+        <View style={styles.container}>
+          <ImageBackground style={styles.avatar}>
+            <View style={styles.icon}>
+              <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
+            </View>
+            {/* <View style={styles.icon}>
           <AntDesign name="closecircleo" size={25} color="#BDBDBD" />
         </View> */}
-        </ImageBackground>
+          </ImageBackground>
 
-        <Text style={styles.title}>Реєстрація</Text>
+          <Text style={styles.title}>Реєстрація</Text>
 
-        <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
-        >
           <RegistrationForm />
-        </KeyboardAvoidingView>
 
-        <ButtonFormSubmit text="Зареєстуватися" />
-        <AuthorisationLinkTo question="Вже є акаунт? " action="Увійти" />
-      </View>
+          <ButtonFormSubmit text="Зареєстуватися" />
+          <AuthorisationLinkTo question="Вже є акаунт? " action="Увійти" />
+        </View>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }
@@ -46,7 +47,8 @@ export default function RegistrationScreen() {
 const styles = StyleSheet.create({
   container: {
     position: "relative",
-    marginTop: "auto",
+    // marginTop: "auto",
+    justifyContent: "flex-end",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingHorizontal: 16,

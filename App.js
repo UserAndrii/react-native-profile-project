@@ -1,5 +1,9 @@
 import { useFonts } from "expo-font";
-import { ImageBackground, StyleSheet } from "react-native";
+import {
+  ImageBackground,
+  KeyboardAvoidingView,
+  StyleSheet,
+} from "react-native";
 
 import RegistrationScreen from "./src/screens/RegistrationScreen";
 import LoginScreen from "./src/screens/LoginScreen";
@@ -8,7 +12,7 @@ import bgImage from "./src/images/bg-mobile-photo.jpg";
 import { useState } from "react";
 
 export default function App() {
-  const [screens, useScreens] = useState(!true);
+  const [screens, useScreens] = useState(true);
 
   const [fontsLoaded] = useFonts({
     Roboto: require("./src/fonts/Roboto-Regular.ttf"),
@@ -20,8 +24,9 @@ export default function App() {
 
   return (
     <ImageBackground source={bgImage} style={styles.backgroundImage}>
-      {/* {screens ? <RegistrationScreen /> : <LoginScreen />} */}
-      <PostsScreen />
+      {screens ? <RegistrationScreen /> : <LoginScreen />}
+
+      {/* <PostsScreen /> */}
     </ImageBackground>
   );
 }
