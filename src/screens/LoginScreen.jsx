@@ -2,6 +2,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -15,21 +16,21 @@ import AuthorisationLinkTo from "../components/AuthorisationLinkTo";
 export default function LoginScreen() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Увійти</Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+      >
+        <View style={styles.container}>
+          <Text style={styles.title}>Увійти</Text>
 
-        <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
-        >
           <LoginForm />
-        </KeyboardAvoidingView>
 
-        <ButtonFormSubmit text="Зареєстуватися" />
-        <AuthorisationLinkTo
-          question="Немає акаунту? "
-          action="Зареєструватися"
-        />
-      </View>
+          <ButtonFormSubmit text="Зареєстуватися" />
+          <AuthorisationLinkTo
+            question="Немає акаунту? "
+            action="Зареєструватися"
+          />
+        </View>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }

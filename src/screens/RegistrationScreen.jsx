@@ -3,6 +3,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -19,7 +20,6 @@ export default function RegistrationScreen() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         behavior={Platform.OS == "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS == "ios" ? 0 : 100}
         style={{ flex: 1, justifyContent: "flex-end" }}
       >
         <View style={styles.container}>
@@ -47,7 +47,6 @@ export default function RegistrationScreen() {
 const styles = StyleSheet.create({
   container: {
     position: "relative",
-    // marginTop: "auto",
     justifyContent: "flex-end",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
