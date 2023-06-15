@@ -1,43 +1,71 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
-export default function RegistrationForm() {
+export default function RegistrationForm({
+  data: { login, email, password },
+  changeData,
+}) {
   const [visiblePassword, useVisiblePassword] = useState(true);
+  const [focused, setFocused] = useState("");
 
   return (
     <View style={styles.inputWrapper}>
       <TextInput
-        style={styles.input}
+        style={
+          focused === "login" || login
+            ? { ...styles.input, ...styles.focusedInput }
+            : { ...styles.input }
+        }
         name="login"
         textContentType="nickname"
         placeholder="Логін"
         placeholderTextColor="#BDBDBD"
+        value={login}
+        onChangeText={(value) => changeData("login", value)}
+        onFocus={() => setFocused("login")}
       ></TextInput>
 
       <TextInput
-        style={styles.input}
+        style={
+          focused === "email" || email
+            ? { ...styles.input, ...styles.focusedInput }
+            : { ...styles.input }
+        }
         name="email"
+        inputMode="email"
         textContentType="emailAddress"
         placeholder="Адреса електронної пошти"
         placeholderTextColor="#BDBDBD"
+        value={email}
+        onChangeText={(value) => changeData("email", value)}
+        onFocus={() => setFocused("email")}
       ></TextInput>
 
       <View style={styles.passwordWrapper}>
         <TextInput
-          style={styles.input}
+          style={
+            focused === "password" || password
+              ? { ...styles.input, ...styles.focusedInput }
+              : { ...styles.input }
+          }
           name="password"
           textContentType="password"
           secureTextEntry={visiblePassword}
           placeholder="Пароль"
           placeholderTextColor="#BDBDBD"
+          value={password}
+          onChangeText={(value) => changeData("password", value)}
+          onFocus={() => setFocused("password")}
         ></TextInput>
 
-        <Pressable
-          style={styles.switch}
-          onPress={() => useVisiblePassword(!visiblePassword)}
-        >
-          <Text>{visiblePassword ? "Показати" : "Сховати"}</Text>
-        </Pressable>
+        {password && (
+          <Pressable
+            style={styles.switch}
+            onPress={() => useVisiblePassword(!visiblePassword)}
+          >
+            <Text>{visiblePassword ? "Показати" : "Сховати"}</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );
@@ -66,6 +94,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     color: "#212121",
+  },
+
+  focusedInput: {
+    borderColor: "#FF6C00",
+    backgroundColor: "#FFFFFF",
   },
 
   passwordWrapper: {

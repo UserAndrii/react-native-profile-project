@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -13,6 +14,15 @@ import ButtonFormSubmit from "../components/ButtonFormSubmit";
 import AuthorisationLinkTo from "../components/AuthorisationLinkTo";
 
 export default function LoginScreen() {
+  const [currentUser, setCurrentUser] = useState({ email: "", password: "" });
+
+  const handleChangeData = (name, value) => {
+    setCurrentUser((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
   return (
     <>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -23,12 +33,15 @@ export default function LoginScreen() {
           <View style={styles.container}>
             <Text style={styles.title}>Увійти</Text>
 
-            <LoginForm />
+            <LoginForm data={currentUser} changeData={handleChangeData} />
           </View>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
       <View style={styles.auth}>
-        <ButtonFormSubmit text="Зареєстуватися" />
+        <ButtonFormSubmit
+          text="Зареєстуватися"
+          onSubmit={() => console.log(currentUser)}
+        />
         <AuthorisationLinkTo
           question="Немає акаунту? "
           action="Зареєструватися"

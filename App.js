@@ -26,9 +26,9 @@ export default function App() {
   return (
     <>
       <ImageBackground source={bgImage} style={styles.backgroundImage}>
-        <PostsScreen />
+        {/* <PostsScreen /> */}
 
-        {/* {screens ? <RegistrationScreen /> : <LoginScreen />} */}
+        {screens ? <RegistrationScreen /> : <LoginScreen />}
         <View style={styles.placeholder}></View>
       </ImageBackground>
     </>

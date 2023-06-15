@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   ImageBackground,
   Keyboard,
@@ -15,6 +16,15 @@ import ButtonFormSubmit from "../components/ButtonFormSubmit";
 import AuthorisationLinkTo from "../components/AuthorisationLinkTo";
 
 export default function RegistrationScreen() {
+  const [user, setUser] = useState({ login: "", email: "", password: "" });
+
+  const handleChangeData = (name, value) => {
+    setUser((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
   return (
     <>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -35,12 +45,15 @@ export default function RegistrationScreen() {
 
             <Text style={styles.title}>Реєстрація</Text>
 
-            <RegistrationForm />
+            <RegistrationForm data={user} changeData={handleChangeData} />
           </View>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
       <View style={styles.auth}>
-        <ButtonFormSubmit text="Зареєстуватися" />
+        <ButtonFormSubmit
+          text="Зареєстуватися"
+          onSubmit={() => console.log(user)}
+        />
         <AuthorisationLinkTo question="Вже є акаунт? " action="Увійти" />
       </View>
     </>
