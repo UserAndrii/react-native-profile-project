@@ -3,7 +3,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -17,43 +16,52 @@ import AuthorisationLinkTo from "../components/AuthorisationLinkTo";
 
 export default function RegistrationScreen() {
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-        style={{ flex: 1, justifyContent: "flex-end" }}
-      >
-        <View style={styles.container}>
-          <ImageBackground style={styles.avatar}>
-            <View style={styles.icon}>
-              <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
-            </View>
-            {/* <View style={styles.icon}>
-          <AntDesign name="closecircleo" size={25} color="#BDBDBD" />
-        </View> */}
-          </ImageBackground>
+    <>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
+          style={{ flex: 1, justifyContent: "flex-end", zIndex: 10 }}
+        >
+          <View style={styles.container}>
+            <ImageBackground style={styles.avatar}>
+              <View style={styles.icon}>
+                <AntDesign name="pluscircleo" size={25} color="#FF6C00" />
+              </View>
 
-          <Text style={styles.title}>Реєстрація</Text>
+              {/* <View style={styles.icon}>
+              <AntDesign name="closecircleo" size={25} color="#BDBDBD" />
+            </View> */}
+            </ImageBackground>
 
-          <RegistrationForm />
+            <Text style={styles.title}>Реєстрація</Text>
 
-          <ButtonFormSubmit text="Зареєстуватися" />
-          <AuthorisationLinkTo question="Вже є акаунт? " action="Увійти" />
-        </View>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+            <RegistrationForm />
+          </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+      <View style={styles.auth}>
+        <ButtonFormSubmit text="Зареєстуватися" />
+        <AuthorisationLinkTo question="Вже є акаунт? " action="Увійти" />
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     position: "relative",
-    justifyContent: "flex-end",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingHorizontal: 16,
     paddingTop: 92,
-    paddingBottom: 78,
     backgroundColor: "#FFFFFF",
+  },
+
+  auth: {
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 16,
+    paddingBottom: 78,
+    zIndex: 10,
   },
 
   avatar: {

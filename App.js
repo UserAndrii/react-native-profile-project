@@ -3,6 +3,7 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
   StyleSheet,
+  View,
 } from "react-native";
 
 import RegistrationScreen from "./src/screens/RegistrationScreen";
@@ -23,16 +24,29 @@ export default function App() {
   }
 
   return (
-    <ImageBackground source={bgImage} style={styles.backgroundImage}>
-      {screens ? <RegistrationScreen /> : <LoginScreen />}
+    <>
+      <ImageBackground source={bgImage} style={styles.backgroundImage}>
+        <PostsScreen />
 
-      {/* <PostsScreen /> */}
-    </ImageBackground>
+        {/* {screens ? <RegistrationScreen /> : <LoginScreen />} */}
+        <View style={styles.placeholder}></View>
+      </ImageBackground>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   backgroundImage: {
+    position: "relative",
     flex: 1,
+  },
+
+  placeholder: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    backgroundColor: "#FFFFFF",
+    height: 400,
+    width: "100%",
   },
 });

@@ -2,7 +2,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -15,23 +14,27 @@ import AuthorisationLinkTo from "../components/AuthorisationLinkTo";
 
 export default function LoginScreen() {
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-      >
-        <View style={styles.container}>
-          <Text style={styles.title}>Увійти</Text>
+    <>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
+          style={{ flex: 1, justifyContent: "flex-end", zIndex: 10 }}
+        >
+          <View style={styles.container}>
+            <Text style={styles.title}>Увійти</Text>
 
-          <LoginForm />
-
-          <ButtonFormSubmit text="Зареєстуватися" />
-          <AuthorisationLinkTo
-            question="Немає акаунту? "
-            action="Зареєструватися"
-          />
-        </View>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+            <LoginForm />
+          </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+      <View style={styles.auth}>
+        <ButtonFormSubmit text="Зареєстуватися" />
+        <AuthorisationLinkTo
+          question="Немає акаунту? "
+          action="Зареєструватися"
+        />
+      </View>
+    </>
   );
 }
 
@@ -43,8 +46,14 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     paddingHorizontal: 16,
     paddingTop: 32,
-    paddingBottom: 144,
     backgroundColor: "#FFFFFF",
+  },
+
+  auth: {
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 16,
+    paddingBottom: 144,
+    zIndex: 10,
   },
 
   title: {
