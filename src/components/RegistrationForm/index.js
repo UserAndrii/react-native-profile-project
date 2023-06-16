@@ -6,13 +6,13 @@ export default function RegistrationForm({
   changeData,
 }) {
   const [visiblePassword, useVisiblePassword] = useState(true);
-  const [focused, setFocused] = useState("");
+  const [focused, setFocused] = useState(null);
 
   return (
     <View style={styles.inputWrapper}>
       <TextInput
         style={
-          focused === "login" || login
+          focused === "login"
             ? { ...styles.input, ...styles.focusedInput }
             : { ...styles.input }
         }
@@ -23,11 +23,12 @@ export default function RegistrationForm({
         value={login}
         onChangeText={(value) => changeData("login", value)}
         onFocus={() => setFocused("login")}
+        onBlur={() => setFocused(null)}
       ></TextInput>
 
       <TextInput
         style={
-          focused === "email" || email
+          focused === "email"
             ? { ...styles.input, ...styles.focusedInput }
             : { ...styles.input }
         }
@@ -39,12 +40,13 @@ export default function RegistrationForm({
         value={email}
         onChangeText={(value) => changeData("email", value)}
         onFocus={() => setFocused("email")}
+        onBlur={() => setFocused(null)}
       ></TextInput>
 
       <View style={styles.passwordWrapper}>
         <TextInput
           style={
-            focused === "password" || password
+            focused === "password"
               ? { ...styles.input, ...styles.focusedInput }
               : { ...styles.input }
           }
@@ -56,6 +58,7 @@ export default function RegistrationForm({
           value={password}
           onChangeText={(value) => changeData("password", value)}
           onFocus={() => setFocused("password")}
+          onBlur={() => setFocused(null)}
         ></TextInput>
 
         {password && (

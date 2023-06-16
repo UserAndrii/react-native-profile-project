@@ -3,13 +3,13 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function LoginForm({ data: { email, password }, changeData }) {
   const [visiblePassword, useVisiblePassword] = useState(true);
-  const [focused, setFocused] = useState("");
+  const [focused, setFocused] = useState(null);
 
   return (
     <View style={styles.inputWrapper}>
       <TextInput
         style={
-          focused === "email" || email
+          focused === "email"
             ? { ...styles.input, ...styles.focusedInput }
             : { ...styles.input }
         }
@@ -21,12 +21,13 @@ export default function LoginForm({ data: { email, password }, changeData }) {
         value={email}
         onChangeText={(value) => changeData("email", value)}
         onFocus={() => setFocused("email")}
+        onBlur={() => setFocused(null)}
       ></TextInput>
 
       <View style={styles.passwordWrapper}>
         <TextInput
           style={
-            focused === "password" || password
+            focused === "password"
               ? { ...styles.input, ...styles.focusedInput }
               : { ...styles.input }
           }
@@ -38,6 +39,7 @@ export default function LoginForm({ data: { email, password }, changeData }) {
           value={password}
           onChangeText={(value) => changeData("password", value)}
           onFocus={() => setFocused("password")}
+          onBlur={() => setFocused(null)}
         ></TextInput>
 
         {password && (
