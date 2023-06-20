@@ -2,16 +2,25 @@ import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function ProfilePost() {
+  const navigation = useNavigation();
   return (
     <View style={styles.post}>
       <ImageBackground style={styles.image}></ImageBackground>
       <Text style={styles.text}>Ліс</Text>
       <View style={styles.infoBox}>
         <View style={styles.box}>
-          <Feather name="message-circle" size={24} style={styles.icon} />
-          <Text style={{...styles.postsNumber, marginRight: 24}}>8</Text>
+          <Feather
+            onPress={() => {
+              navigation.navigate('Comments');
+            }}
+            name="message-circle"
+            size={24}
+            style={styles.icon}
+          />
+          <Text style={{ ...styles.postsNumber, marginRight: 24 }}>8</Text>
           <AntDesign name="like2" size={24} style={styles.icon} />
           <Text style={styles.postsNumber}>153</Text>
         </View>

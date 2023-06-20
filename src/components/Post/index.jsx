@@ -1,15 +1,25 @@
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Post() {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.post}>
       <ImageBackground style={styles.image}></ImageBackground>
       <Text style={styles.text}>Ліс</Text>
       <View style={styles.infoBox}>
         <View style={styles.box}>
-          <Feather name="message-circle" size={24} style={styles.icon} />
+          <Feather
+            onPress={() => {
+              navigation.navigate('Comments');
+            }}
+            name="message-circle"
+            size={24}
+            style={styles.icon}
+          />
           <Text style={styles.postsNumber}>0</Text>
         </View>
         <View style={styles.box}>
