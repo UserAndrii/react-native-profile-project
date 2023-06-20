@@ -25,10 +25,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 31,
 
-    borderTopWidth: 1,
+    backgroundColor: "#FFFFFF",
     borderTopColor: "#E5E5E5",
+    borderTopWidth: 1,
+
     paddingTop: 9,
+    paddingBottom: 34,
+
     width: "100%",
+    zIndex: 10,
   },
 
   iconsNav: {

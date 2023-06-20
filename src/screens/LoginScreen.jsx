@@ -7,13 +7,17 @@ import {
   Text,
   TouchableWithoutFeedback,
   View,
+  ImageBackground,
 } from "react-native";
+import Toast from "react-native-toast-message";
+
+import bgImage from "../images/bg-mobile-photo.jpg";
 
 import LoginForm from "../components/LoginForm";
 import ButtonFormSubmit from "../components/ButtonFormSubmit";
 import AuthorisationLinkTo from "../components/AuthorisationLinkTo";
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const [currentUser, setCurrentUser] = useState({ email: "", password: "" });
 
   const handleChangeData = (name, value) => {
@@ -23,8 +27,22 @@ export default function LoginScreen() {
     }));
   };
 
+  const checkAndRedirectToHome = () => {
+    const { email, password } = currentUser;
+    if (email && password) {
+      console.log(currentUser);
+      navigation.navigate("Home");
+      return;
+    }
+
+    Toast.show({
+      type: "error",
+      text1: "Oops, all fields must be filled 😔",
+    });
+  };
+
   return (
-    <>
+    <ImageBackground source={bgImage} style={styles.backgroundImage}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAvoidingView
           behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -39,19 +57,35 @@ export default function LoginScreen() {
       </TouchableWithoutFeedback>
       <View style={styles.auth}>
         <ButtonFormSubmit
-          text="Зареєстуватися"
-          onSubmit={() => console.log(currentUser)}
+          text="Увійти"
+          onSubmit={() => checkAndRedirectToHome()}
         />
         <AuthorisationLinkTo
           question="Немає акаунту? "
           action="Зареєструватися"
+          navigateTo="Registration"
         />
       </View>
-    </>
+      <View style={styles.placeholder}></View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    position: "relative",
+    flex: 1,
+  },
+
+  placeholder: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    backgroundColor: "#FFFFFF",
+    height: 400,
+    width: "100%",
+  },
+
   container: {
     position: "relative",
     marginTop: "auto",

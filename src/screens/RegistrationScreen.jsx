@@ -10,12 +10,15 @@ import {
   View,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import Toast from "react-native-toast-message";
+
+import bgImage from "../images/bg-mobile-photo.jpg";
 
 import RegistrationForm from "../components/RegistrationForm";
 import ButtonFormSubmit from "../components/ButtonFormSubmit";
 import AuthorisationLinkTo from "../components/AuthorisationLinkTo";
 
-export default function RegistrationScreen() {
+export default function RegistrationScreen({ navigation }) {
   const [user, setUser] = useState({ login: "", email: "", password: "" });
 
   const handleChangeData = (name, value) => {
@@ -25,8 +28,22 @@ export default function RegistrationScreen() {
     }));
   };
 
+  const checkAndRedirectToHome = () => {
+    const { login, email, password } = user;
+    if (login && email && password) {
+      console.log(user);
+      navigation.navigate("Home");
+      return;
+    }
+
+    Toast.show({
+      type: "error",
+      text1: "Oops, all fields must be filled 😔",
+    });
+  };
+
   return (
-    <>
+    <ImageBackground source={bgImage} style={styles.backgroundImage}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAvoidingView
           behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -52,15 +69,34 @@ export default function RegistrationScreen() {
       <View style={styles.auth}>
         <ButtonFormSubmit
           text="Зареєстуватися"
-          onSubmit={() => console.log(user)}
+          onSubmit={() => checkAndRedirectToHome()}
         />
-        <AuthorisationLinkTo question="Вже є акаунт? " action="Увійти" />
+        <AuthorisationLinkTo
+          question="Вже є акаунт? "
+          action="Увійти"
+          navigateTo="Login"
+        />
       </View>
-    </>
+      <View style={styles.placeholder}></View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    position: "relative",
+    flex: 1,
+  },
+
+  placeholder: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    backgroundColor: "#FFFFFF",
+    height: 400,
+    width: "100%",
+  },
+
   container: {
     position: "relative",
     borderTopLeftRadius: 25,

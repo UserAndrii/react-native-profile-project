@@ -1,17 +1,42 @@
 import { StyleSheet, Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function Header({ title }) {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.header}>
       <Text style={styles.title}>{title}</Text>
-      <Feather name="log-out" size={24} color="#BDBDBD" style={styles.icon} />
+      {title === "Публікації" ? (
+        <Feather
+          onPress={() => {
+            navigation.navigate("Login");
+          }}
+          name="log-out"
+          size={24}
+          color="#BDBDBD"
+          style={styles.icon}
+        />
+      ) : (
+        <AntDesign
+          onPress={() => {
+            navigation.navigate("Posts");
+          }}
+          name="arrowleft"
+          size={24}
+          color="rgba(33, 33, 33, 0.8)"
+          style={{ ...styles.icon, left: 10 }}
+        />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   header: {
+    backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
     borderBottomColor: "#E5E5E5",
     width: "100%",
@@ -25,7 +50,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     letterSpacing: -0.4,
     color: "#212121",
-    marginBottom: 11,
+    marginTop: 44,
+    padding: 11,
   },
 
   icon: {
