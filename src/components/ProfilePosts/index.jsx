@@ -1,10 +1,19 @@
-import { ImageBackground, StyleSheet, Text, View } from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import { SimpleLineIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import {
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function ProfilePost() {
+  const [like, setLike] = useState(0);
   const navigation = useNavigation();
   return (
     <View style={styles.post}>
@@ -12,22 +21,38 @@ export default function ProfilePost() {
       <Text style={styles.text}>Ліс</Text>
       <View style={styles.infoBox}>
         <View style={styles.box}>
-          <Feather
+          <FontAwesome
             onPress={() => {
               navigation.navigate('Comments');
             }}
-            name="message-circle"
+            name="comment"
             size={24}
-            style={styles.icon}
+            style={{ ...styles.icon, color: 8 > 0 ? '#FF6C00' : '#BDBDBD' }}
           />
           <Text style={{ ...styles.postsNumber, marginRight: 24 }}>8</Text>
-          <AntDesign name="like2" size={24} style={styles.icon} />
-          <Text style={styles.postsNumber}>153</Text>
+
+          <AntDesign
+            name="like2"
+            size={24}
+            style={{ ...styles.icon, color: like > 0 ? '#FF6C00' : '#BDBDBD' }}
+            onPress={() => setLike(prev => prev + 1)}
+          />
+          <Text style={styles.postsNumber}>{like}</Text>
         </View>
-        <View style={styles.box}>
-          <SimpleLineIcons name="location-pin" size={24} style={styles.icon} />
-          <Text style={styles.locationText}>Ukraine</Text>
-        </View>
+        <Pressable
+          onPress={() => {
+            navigation.navigate('Map');
+          }}
+        >
+          <View style={styles.box}>
+            <SimpleLineIcons
+              name="location-pin"
+              size={24}
+              style={styles.icon}
+            />
+            <Text style={styles.locationText}>Ukraine</Text>
+          </View>
+        </Pressable>
       </View>
     </View>
   );
@@ -42,6 +67,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F6F6F6',
     height: 240,
     borderRadius: 8,
+    overflow: 'hidden',
   },
 
   text: {

@@ -1,33 +1,42 @@
-import { ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import {
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+
 import { Feather } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 
-export default function Post() {
+export default function Post({ photoUri, name, location, geolocation }) {
   const navigation = useNavigation();
 
   return (
     <View style={styles.post}>
-      <ImageBackground style={styles.image}></ImageBackground>
-      <Text style={styles.text}>Ліс</Text>
+      <ImageBackground style={styles.image} source={{ uri: photoUri }} />
+      <Text style={styles.text}>{name}</Text>
       <View style={styles.infoBox}>
         <View style={styles.box}>
           <Feather
-            onPress={() => {
-              navigation.navigate('Comments');
-            }}
+            onPress={() => navigation.navigate('Comments')}
             name="message-circle"
             size={24}
             style={styles.icon}
           />
           <Text style={styles.postsNumber}>0</Text>
         </View>
-        <View style={styles.box}>
-          <SimpleLineIcons name="location-pin" size={24} style={styles.icon} />
-          <Text style={styles.locationText}>
-            Ivano-Frankivs'k Region, Ukraine
-          </Text>
-        </View>
+        <Pressable onPress={() => navigation.navigate('Map', geolocation)}>
+          <View style={styles.box}>
+            <SimpleLineIcons
+              name="location-pin"
+              size={24}
+              style={styles.icon}
+            />
+            <Text style={styles.locationText}>{location}</Text>
+          </View>
+        </Pressable>
       </View>
     </View>
   );
@@ -42,6 +51,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F6F6F6',
     height: 240,
     borderRadius: 8,
+    overflow: 'hidden',
   },
 
   text: {

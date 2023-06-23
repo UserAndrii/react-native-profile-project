@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { Feather } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
+import { StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Feather } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function Header({ title }) {
   const navigation = useNavigation();
@@ -9,11 +9,9 @@ export default function Header({ title }) {
   return (
     <View style={styles.header}>
       <Text style={styles.title}>{title}</Text>
-      {title === "Публікації" ? (
+      {title === 'Публікації' ? (
         <Feather
-          onPress={() => {
-            navigation.navigate("Login");
-          }}
+          onPress={() => navigation.goBack()}
           name="log-out"
           size={24}
           color="#BDBDBD"
@@ -22,7 +20,9 @@ export default function Header({ title }) {
       ) : (
         <AntDesign
           onPress={() => {
-            navigation.navigate("Posts");
+            return title === 'Створити публікацію'
+              ? navigation.navigate('Posts')
+              : navigation.goBack();
           }}
           name="arrowleft"
           size={24}
@@ -36,26 +36,26 @@ export default function Header({ title }) {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E5E5",
-    width: "100%",
+    borderBottomColor: '#E5E5E5',
+    width: '100%',
   },
 
   title: {
-    fontFamily: "Roboto",
-    fontWeight: "500",
+    fontFamily: 'Roboto',
+    fontWeight: '500',
     fontSize: 17,
     lineHeight: 22,
-    textAlign: "center",
+    textAlign: 'center',
     letterSpacing: -0.4,
-    color: "#212121",
+    color: '#212121',
     marginTop: 44,
     padding: 11,
   },
 
   icon: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 10,
     right: 16,
   },

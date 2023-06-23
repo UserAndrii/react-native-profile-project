@@ -7,8 +7,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import RegistrationScreen from './src/screens/RegistrationScreen';
 import CommentsScreen from './src/screens/CommentsScreen';
 import LoginScreen from './src/screens/LoginScreen';
-import Home from './src/screens/Home';
+import MapScreen from './src/screens/MapScreen';
 import Header from './src/components/Header';
+import Home from './src/screens/Home';
 
 const MainStack = createStackNavigator();
 
@@ -39,6 +40,14 @@ export default function App() {
             component={CommentsScreen}
             options={{
               header: () => <Header title="Коментарі" />,
+              headerShown: 'true',
+            }}
+          />
+          <MainStack.Screen
+            name="Map"
+            component={MapScreen}
+            options={{
+              header: () => <Header title="Карта" />,
               headerShown: 'true',
             }}
           />

@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F6F6F6',
     height: 240,
     borderRadius: 8,
+    overflow: 'hidden',
   },
 
   inputWrapper: {
