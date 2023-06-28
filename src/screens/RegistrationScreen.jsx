@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { createUser } from '../redux/operations';
+import { selectErrorMessage } from '../redux/selectors';
 
 import {
   ImageBackground,
@@ -26,6 +29,9 @@ import ButtonFormSubmit from '../components/ButtonFormSubmit';
 import AuthorisationLinkTo from '../components/AuthorisationLinkTo';
 
 export default function RegistrationScreen({ navigation }) {
+  const dispatch = useDispatch();
+  const errorMessage = useSelector(selectErrorMessage);
+
   const [user, setUser] = useState({
     login: '',
     email: '',
@@ -48,7 +54,7 @@ export default function RegistrationScreen({ navigation }) {
         setHasPermission(status === 'granted');
       })();
     } catch (error) {
-      console.log(error.message);
+      console.log('RegistrationScreen, CameraPermissions: ', error.message);
     }
   }, []);
 
@@ -66,7 +72,6 @@ export default function RegistrationScreen({ navigation }) {
   const takePhoto = async () => {
     if (cameraRef) {
       const { uri } = await cameraRef.takePictureAsync();
-      await MediaLibrary.createAssetAsync(uri);
       setUser(prevState => ({
         ...prevState,
         avatar: uri,
@@ -99,7 +104,7 @@ export default function RegistrationScreen({ navigation }) {
         }
       }
     } catch (error) {
-      console.log(error.message);
+      console.log('registration, pickImage: ', error.message);
     }
   };
 
@@ -113,8 +118,16 @@ export default function RegistrationScreen({ navigation }) {
   const checkAndRedirectToHome = () => {
     const { login, email, password } = user;
     if (login && email && password) {
-      console.log(user);
-      navigation.navigate('Home');
+      dispatch(createUser(user)).then(({ meta: { rejectedWithValue } }) => {
+        if (rejectedWithValue) {
+          Toast.show({
+            type: 'error',
+            text1: 'The data entered is incorrect',
+            text2: 'The password must contain at least 6 characters',
+          });
+          return;
+        }
+      });
       return;
     }
 
@@ -198,7 +211,7 @@ export default function RegistrationScreen({ navigation }) {
               ) : (
                 <ImageBackground
                   style={styles.avatar}
-                  source={{ uri: user.avatar }}
+                  source={{ uri: user.avatar ? user.avatar : null }}
                 ></ImageBackground>
               )}
 

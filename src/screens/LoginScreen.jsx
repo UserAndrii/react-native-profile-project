@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { authUser } from '../redux/operations';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -8,36 +10,66 @@ import {
   TouchableWithoutFeedback,
   View,
   ImageBackground,
-} from "react-native";
-import Toast from "react-native-toast-message";
+} from 'react-native';
+import Toast from 'react-native-toast-message';
+import bgImage from '../images/bg-mobile-photo.jpg';
 
-import bgImage from "../images/bg-mobile-photo.jpg";
+import LoginForm from '../components/LoginForm';
+import ButtonFormSubmit from '../components/ButtonFormSubmit';
+import AuthorisationLinkTo from '../components/AuthorisationLinkTo';
 
-import LoginForm from "../components/LoginForm";
-import ButtonFormSubmit from "../components/ButtonFormSubmit";
-import AuthorisationLinkTo from "../components/AuthorisationLinkTo";
+import { auth } from '../firebase/config';
+import { onAuthStateChanged } from 'firebase/auth';
+import { setCurrentUser } from '../firebase/firestore';
+import { updateUserCredential } from '../redux/slice';
 
 export default function LoginScreen({ navigation }) {
-  const [currentUser, setCurrentUser] = useState({ email: "", password: "" });
+  const dispatch = useDispatch();
+  const [credentialUser, setCredentialUser] = useState({
+    email: '',
+    password: '',
+  });
+
+  useEffect(() => {
+    onAuthStateChanged(auth, async user => {
+      if (user) {
+        const id = user.uid;
+        const credential = await setCurrentUser(id);
+        dispatch(updateUserCredential({ ...credential, id }));
+        navigation.navigate('Home');
+      } else {
+        navigation.navigate('Login');
+      }
+    });
+  }, []);
 
   const handleChangeData = (name, value) => {
-    setCurrentUser((prevState) => ({
+    setCredentialUser(prevState => ({
       ...prevState,
       [name]: value,
     }));
   };
 
   const checkAndRedirectToHome = () => {
-    const { email, password } = currentUser;
+    const { email, password } = credentialUser;
     if (email && password) {
-      console.log(currentUser);
-      navigation.navigate("Home");
+      dispatch(authUser(credentialUser)).then(
+        ({ meta: { rejectedWithValue } }) => {
+          if (rejectedWithValue) {
+            Toast.show({
+              type: 'error',
+              text1: 'The user credentials entered are invalid!',
+            });
+            return;
+          }
+        }
+      );
       return;
     }
 
     Toast.show({
-      type: "error",
-      text1: "Oops, all fields must be filled 😔",
+      type: 'error',
+      text1: 'Oops, all fields must be filled 😔',
     });
   };
 
@@ -45,13 +77,13 @@ export default function LoginScreen({ navigation }) {
     <ImageBackground source={bgImage} style={styles.backgroundImage}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
-          style={{ flex: 1, justifyContent: "flex-end", zIndex: 10 }}
+          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1, justifyContent: 'flex-end', zIndex: 10 }}
         >
           <View style={styles.container}>
             <Text style={styles.title}>Увійти</Text>
 
-            <LoginForm data={currentUser} changeData={handleChangeData} />
+            <LoginForm data={credentialUser} changeData={handleChangeData} />
           </View>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
@@ -73,44 +105,44 @@ export default function LoginScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    position: "relative",
+    position: 'relative',
     flex: 1,
   },
 
   placeholder: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     left: 0,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
     height: 400,
-    width: "100%",
+    width: '100%',
   },
 
   container: {
-    position: "relative",
-    marginTop: "auto",
+    position: 'relative',
+    marginTop: 'auto',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingHorizontal: 16,
     paddingTop: 32,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
   },
 
   auth: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
     paddingBottom: 144,
     zIndex: 10,
   },
 
   title: {
-    fontFamily: "Roboto",
-    fontWeight: "500",
+    fontFamily: 'Roboto',
+    fontWeight: '500',
     fontSize: 30,
     lineHeight: 35,
-    textAlign: "center",
+    textAlign: 'center',
     letterSpacing: 0.01,
-    color: "#212121",
+    color: '#212121',
     marginBottom: 33,
   },
 });

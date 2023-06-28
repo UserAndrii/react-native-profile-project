@@ -1,23 +1,47 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import User from '../components/User';
-import Post from '../components/Post';
+import Posts from '../components/Posts';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { getAllPosts } from '../redux/operations';
+import { selectAllPosts } from '../redux/selectors';
 
-export default function PostsScreen({ route }) {
+export default function PostsScreen() {
+  const dispatch = useDispatch();
+  const posts = useSelector(selectAllPosts);
+
+  useEffect(() => {
+    dispatch(getAllPosts());
+  }, []);
+
   return (
     <ScrollView style={{ backgroundColor: '#FFFFFF' }}>
       <View style={styles.main}>
-        <User name="Natali Romanova" email="email@example.com" />
-        {route.params && (
-          <Post
-            photoUri={route.params.photoUri}
-            name={route.params.name}
-            location={route.params.locationName}
-            geolocation={route.params.geolocation}
-          />
-        )}
-        <Post />
-        <Post />
+        <User />
+        {posts &&
+          posts.map(
+            ({
+              url,
+              name,
+              locationName,
+              geolocation,
+              likes,
+              creationTime,
+              comments,
+            }) => (
+              <Posts
+                key={creationTime}
+                photoUri={url}
+                name={name}
+                location={locationName}
+                likes={likes}
+                geolocation={geolocation}
+                id={creationTime}
+                comments={comments}
+              />
+            )
+          )}
       </View>
     </ScrollView>
   );

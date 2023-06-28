@@ -2,16 +2,21 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
+import { logOut } from '../../redux/operations';
 
 export default function Header({ title }) {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   return (
     <View style={styles.header}>
       <Text style={styles.title}>{title}</Text>
       {title === 'Публікації' ? (
         <Feather
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            dispatch(logOut());
+          }}
           name="log-out"
           size={24}
           color="#BDBDBD"

@@ -1,5 +1,6 @@
 import { Camera } from 'expo-camera';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import {
   ImageBackground,
@@ -14,18 +15,24 @@ import {
 } from 'react-native';
 
 import Toast from 'react-native-toast-message';
+import * as Location from 'expo-location';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
-import * as Location from 'expo-location';
 
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
+import { createPost } from '../redux/operations';
+import { selectEmail } from '../redux/selectors';
 
 export default function CreatePostScreen() {
+  const dispatch = useDispatch();
+  const email = useSelector(selectEmail);
+
   const [name, setName] = useState('');
   const [photoUri, setPhotoUri] = useState('');
   const [locationName, setLocationName] = useState('');
+  const [geolocation, setGeolocation] = useState('');
 
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [hasPermission, setHasPermission] = useState(null);
@@ -45,7 +52,7 @@ export default function CreatePostScreen() {
         setHasPermission(status === 'granted');
       })();
 
-      // add location
+      // add Permissions
       (async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
 
@@ -56,8 +63,20 @@ export default function CreatePostScreen() {
           });
         }
       })();
+
+      // add location
+      (async () => {
+        setIsLoadingLocation(true);
+        let location = await Location.getCurrentPositionAsync({});
+        setIsLoadingLocation(false);
+        const coords = {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        };
+        setGeolocation(coords);
+      })();
     } catch (error) {
-      console.log(error.message);
+      console.log('Permissions location: ', error.message);
     }
   }, []);
 
@@ -75,7 +94,6 @@ export default function CreatePostScreen() {
   const takePhoto = async () => {
     if (cameraRef) {
       const { uri } = await cameraRef.takePictureAsync();
-      await MediaLibrary.createAssetAsync(uri);
       setPhotoUri(uri);
     }
   };
@@ -98,35 +116,36 @@ export default function CreatePostScreen() {
         }
       }
     } catch (error) {
-      console.log(error.message);
+      console.log('pickImage: ', error.message);
     }
   };
 
   const createPostPublication = () => {
     try {
-      // add location
-      (async () => {
-        setIsLoadingLocation(true);
-        let location = await Location.getCurrentPositionAsync({});
-        setIsLoadingLocation(false);
-        const coords = {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          name: locationName,
-        };
+      if (photoUri && name && locationName) {
+        setGeolocation(geolocation => ({ ...geolocation, name: locationName }));
 
         const newPost = {
           photoUri,
           name,
           locationName,
-          geolocation: coords,
+          geolocation,
+          email,
         };
 
+        dispatch(createPost(newPost));
         deletePost();
-        navigation.navigate('Posts', newPost);
-      })();
+        navigation.navigate('Posts');
+        return;
+      }
+
+      Toast.show({
+        type: 'error',
+        text1: `Oops, you didn't take a photo`,
+        text2: `or not all the fields are filled in 😔`,
+      });
     } catch (error) {
-      console.log(error.message);
+      console.log('creat posts: ', error.message);
       setIsLoadingLocation(false);
     }
   };
@@ -144,7 +163,7 @@ export default function CreatePostScreen() {
           <ImageBackground
             style={styles.image}
             source={{
-              uri: photoUri,
+              uri: photoUri ? photoUri : null,
             }}
           >
             <MaterialIcons
@@ -257,23 +276,17 @@ export default function CreatePostScreen() {
             disabled={(!name && !locationName) || isLoadingLocation}
             style={{
               ...styles.button,
-              backgroundColor:
-                name && locationName && !isLoadingLocation
-                  ? '#FF6C00'
-                  : '#F6F6F6',
+              backgroundColor: name && locationName ? '#FF6C00' : '#F6F6F6',
             }}
             onPress={createPostPublication}
           >
             <Text
               style={{
                 ...styles.btnText,
-                color:
-                  name && locationName && !isLoadingLocation
-                    ? '#FFFFFF'
-                    : '#BDBDBD',
+                color: name && locationName ? '#FFFFFF' : '#BDBDBD',
               }}
             >
-              {isLoadingLocation ? 'Опублікування...' : 'Опублікувати'}
+              Опублікувати
             </Text>
           </Pressable>
 
