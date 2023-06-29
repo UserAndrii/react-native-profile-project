@@ -8,6 +8,7 @@ import {
   logOut,
   addComment,
   updateAvatar,
+  deletePost,
 } from '../redux/operations';
 
 const userSlice = createSlice({
@@ -126,7 +127,15 @@ const postSlice = createSlice({
           ? post.comments.push(action.payload)
           : (post.comments = [action.payload]);
       })
-      .addCase(addComment.rejected, () => {});
+      .addCase(addComment.rejected, () => {})
+
+      .addCase(deletePost.pending, () => {})
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.posts = state.posts.filter(
+          post => post.creationTime !== action.payload
+        );
+      })
+      .addCase(deletePost.rejected, () => {});
   },
 });
 

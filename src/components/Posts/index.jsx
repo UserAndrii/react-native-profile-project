@@ -7,13 +7,15 @@ import {
   StyleSheet,
   Text,
   View,
+  Alert,
 } from 'react-native';
 
 import { SimpleLineIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
-import { getLike } from '../../redux/operations';
+import { deletePost, getLike } from '../../redux/operations';
 import { selectEmail } from '../../redux/selectors';
 
 export default function Posts({
@@ -24,15 +26,27 @@ export default function Posts({
   geolocation,
   id,
   comments,
+  email,
 }) {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
-  const email = useSelector(selectEmail);
+  const currentEmail = useSelector(selectEmail);
 
   const addLike = () => {
-    if (likes?.includes(email)) return;
-    dispatch(getLike({ id, email }));
+    if (likes?.includes(currentEmail)) return;
+    dispatch(getLike({ id, currentEmail }));
+  };
+
+  const showAlert = () => {
+    Alert.alert(
+      'Видалення поста',
+      'Ви точно хочете видалити пост?',
+      [
+        { text: 'Так, видалити', onPress: () => dispatch(deletePost(id)) },
+        { text: 'Ні, відмінити', style: 'cancel' },
+      ],
+      { cancelable: false }
+    );
   };
 
   return (
@@ -40,7 +54,16 @@ export default function Posts({
       <ImageBackground
         style={styles.image}
         source={{ uri: photoUri ? photoUri : null }}
-      ></ImageBackground>
+      >
+        {email === currentEmail && (
+          <MaterialIcons
+            name="delete"
+            size={30}
+            style={styles.deleteIcon}
+            onPress={showAlert}
+          />
+        )}
+      </ImageBackground>
       <Text style={styles.text}>{name}</Text>
       <View style={styles.infoBox}>
         <View style={styles.box}>
@@ -99,6 +122,14 @@ const styles = StyleSheet.create({
     height: 240,
     borderRadius: 8,
     overflow: 'hidden',
+  },
+
+  deleteIcon: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    color: '#FF6C00',
+    opacity: 0.8,
   },
 
   text: {

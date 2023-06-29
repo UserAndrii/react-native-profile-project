@@ -6,6 +6,7 @@ import {
   collection,
   updateDoc,
   arrayUnion,
+  deleteDoc,
 } from 'firebase/firestore';
 import { db } from './config';
 
@@ -95,5 +96,13 @@ export const sendComment = async ({ id, ...commentData }) => {
     });
   } catch (error) {
     console.log('sendComment: ', error.message);
+  }
+};
+
+export const removePost = async id => {
+  try {
+    await deleteDoc(doc(db, 'posts', `${id}`));
+  } catch (error) {
+    console.log('removePost: ', error.message);
   }
 };

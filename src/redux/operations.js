@@ -11,6 +11,7 @@ import {
   allPosts,
   createPosts,
   rejecterUser,
+  removePost,
   sendComment,
   setCurrentUser,
   updateUserAvatar,
@@ -162,6 +163,18 @@ export const addComment = createAsyncThunk(
     try {
       await sendComment(commentData);
       return commentData;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deletePost = createAsyncThunk(
+  'post/deletePost',
+  async (id, { rejectWithValue }) => {
+    try {
+      await removePost(id);
+      return id;
     } catch (error) {
       return rejectWithValue(error.message);
     }

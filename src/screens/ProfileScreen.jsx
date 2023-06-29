@@ -88,6 +88,7 @@ export default function ProfileScreen() {
                 likes,
                 creationTime,
                 comments,
+                email,
               }) => (
                 <Posts
                   key={creationTime}
@@ -98,6 +99,7 @@ export default function ProfileScreen() {
                   geolocation={geolocation}
                   id={creationTime}
                   comments={comments}
+                  email={email}
                 />
               )
             )
